@@ -1,22 +1,22 @@
 version: 0.2
-batch:
-  fast-fail: true
-  build-graph:
-    - identifier: arm64
-      ignore-failure: false
-      env:
-        compute-type: BUILD_GENERAL1_MEDIUM
-        type: ARM_CONTAINER
-    - identifier: amd64
-      ignore-failure: false
-      env:
-        compute-type: BUILD_GENERAL1_MEDIUM
-        type: LINUX_CONTAINER
-    - identifier: manifest
-      buildspec: docker_manifest_buildspec.yml
-      depend-on:
-        - arm64
-        - amd64
+# batch:
+#   fast-fail: true
+#   build-graph:
+#     - identifier: arm64
+#       ignore-failure: false
+#       env:
+#         compute-type: BUILD_GENERAL1_MEDIUM
+#         type: ARM_CONTAINER
+#     - identifier: amd64
+#       ignore-failure: false
+#       env:
+#         compute-type: BUILD_GENERAL1_MEDIUM
+#         type: LINUX_CONTAINER
+#     - identifier: manifest
+#       buildspec: docker_manifest_buildspec.yml
+#       depend-on:
+#         - arm64
+#         - amd64
 phases:
   install:
     commands:
