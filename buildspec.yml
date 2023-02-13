@@ -17,8 +17,6 @@ batch:
 
 phases:
   install:
-    runtime-versions: 
-      ruby: 3.1
     commands:
       # needed to override if .ruby-version is in the source
       - export RBENV_VERSION=$RUBY_31_VERSION
