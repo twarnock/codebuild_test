@@ -3,18 +3,20 @@ batch:
   fast-fail: true
   build-graph:
     - identifier: arm64
-      # buildspec: docker_buildspec.yml
       ignore-failure: false
       env:
         compute-type: BUILD_GENERAL1_MEDIUM
         type: ARM_CONTAINER
     - identifier: amd64
-      # buildspec: docker_buildspec.yml
       ignore-failure: false
       env:
         compute-type: BUILD_GENERAL1_MEDIUM
         type: LINUX_CONTAINER
-
+    - identifier: manifest
+      buildspec: docker_manifest_buildspec.yml
+      depend-on:
+        - arm64
+        - amd64
 phases:
   install:
     commands:
