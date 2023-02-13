@@ -1,0 +1,50 @@
+version: 0.2
+batch:
+  fast-fail: true
+  build-graph:
+    - identifier: arm64
+      # buildspec: docker_buildspec.yml
+      ignore-failure: false
+      env:
+        compute-type: BUILD_GENERAL1_MEDIUM
+        type: ARM_CONTAINER
+    - identifier: amd64
+      # buildspec: docker_buildspec.yml
+      ignore-failure: false
+      env:
+        compute-type: BUILD_GENERAL1_MEDIUM
+        type: LINUX_CONTAINER
+
+phases:
+  install:
+    runtime-versions: 
+      ruby: 3.1
+    commands:
+      - echo "This is a batch build."
+      - export RBENV_VERSION=$RUBY_31_VERSION
+      - aws s3 cp --only-show-errors s3://cb-prebuilt-binaries/docker/binfmt.tar .
+      - aws s3 cp --only-show-errors s3://cb-prebuilt-binaries/docker/buildx-v0.9.1.linux-amd64 .
+      - mkdir -p ~/.docker/cli-plugins
+      - cp buildx-v0.9.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
+      - chmod a+rx ~/.docker/cli-plugins/docker-buildx
+      - docker load < binfmt.tar
+      - docker run --privileged --rm binfmt --install all
+  pre_build:
+    commands:
+      - echo "prebuild"
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - docker buildx create --name crossx
+      - docker buildx use crossx
+      # - docker buildx build --push --platform=$PLATFORMS --build-arg CODEFLOW_COMMIT_TAG=$COMMIT_TAG -f $DOCKERFILE --cache-from $DOCKER_REPOSITORY:$PULL_REQUEST_TAG --cache-from $DOCKER_REPOSITORY:master $TAGS $DOCKER_PATH
+
+  post_build:
+    commands:
+      # if build failed, fail build here.
+      - if [ "$CODEBUILD_BUILD_SUCCEEDING" = "0" ]; then exit 1; fi
+      - echo "Build completed on `date`"
+
+      # return docker digest
+      # - DIGEST=$(docker buildx imagetools inspect $DOCKER_REPOSITORY:$COMMIT_TAG | grep sha256 | head -n 1 | awk '{print $2}')
+      # - echo "OUTPUT=ASSET:$DOCKER_REPOSITORY@$DIGEST"
