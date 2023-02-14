@@ -3,12 +3,10 @@ version: 0.2
 batch:
   build-graph:
     - identifier: arm64
-      ignore-failure: false
       env:
         compute-type: BUILD_GENERAL1_MEDIUM
         type: ARM_CONTAINER
     - identifier: amd64
-      ignore-failure: false
       env:
         compute-type: BUILD_GENERAL1_MEDIUM
         type: LINUX_CONTAINER
