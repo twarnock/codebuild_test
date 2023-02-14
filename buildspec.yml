@@ -42,7 +42,7 @@ phases:
       - mv docker-buildx ~/.docker/cli-plugins/docker-buildx
       - chmod a+rx ~/.docker/cli-plugins/docker-buildx
       # install binfmt
-      - docker run --privileged --rm tonistiigi/binfmt:qemu-v7.0.0 --install all
+      # - docker run --privileged --rm tonistiigi/binfmt:qemu-v7.0.0 --install all
   pre_build:
     commands:
       - echo "prebuild"
