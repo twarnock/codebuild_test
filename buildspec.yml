@@ -6,11 +6,11 @@ batch:
     - identifier: arm64
       ignore-failure: true
       env:
-        compute-type: BUILD_GENERAL1_MEDIUM
+        compute-type: BUILD_GENERAL1_SMALL
         type: ARM_CONTAINER
     - identifier: amd64
       env:
-        compute-type: BUILD_GENERAL1_MEDIUM
+        compute-type: BUILD_GENERAL1_SMALL
         type: LINUX_CONTAINER
     - identifier: manifest
       ignore-failure: true
