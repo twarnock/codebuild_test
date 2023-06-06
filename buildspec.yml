@@ -8,14 +8,13 @@ batch:
       env:
         compute-type: BUILD_GENERAL1_SMALL
         type: ARM_CONTAINER
-        image: aws/codebuild/amazonlinux2-aarch64-standard:2.0
+        image: $IMAGE_ARM64
     - identifier: amd64
       env:
         compute-type: BUILD_GENERAL1_SMALL
         type: LINUX_CONTAINER
     - identifier: manifest
       ignore-failure: true
-      buildspec: docker_manifest_buildspec.yml
       depend-on:
         - arm64
         - amd64
