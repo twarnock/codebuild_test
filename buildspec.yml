@@ -23,42 +23,13 @@ batch:
 phases:
   install:
     commands:
-      # needed to override if .ruby-version is in the source
-      - export RBENV_VERSION=$RUBY_31_VERSION
-      # install buildx
-      - export BUILDX_VERSION=0.10.2
-      - |
-        if [ "$(uname -m)" = "aarch64" ]; then
-          export ARCH=arm64
-          export BUILDX_SHA=5f6c706833221cd2cae267ac8612c1809f9d7e8f3fe87707ae86cb695c560cd9
-        else 
-          export ARCH=amd64
-          export BUILDX_SHA=ee5a5e3ebf5e5c73ac840993720bd1e72c4beb3b4ee9e85e2d6b4364cac87d89
-        fi
-      - export BUILDX_URL=https://github.com/docker/buildx/releases/download/v${BUILDX_VERSION}/buildx-v${BUILDX_VERSION}.linux-${ARCH}
-      - echo "Downloading ${BUILDX_URL}"
-      - curl -fsSL "$BUILDX_URL" -o docker-buildx && echo "$BUILDX_SHA  docker-buildx" | sha256sum -c -
-      - mkdir -p ~/.docker/cli-plugins
-      - mv docker-buildx ~/.docker/cli-plugins/docker-buildx
-      - chmod a+rx ~/.docker/cli-plugins/docker-buildx
-      # install binfmt
-      # - docker run --privileged --rm tonistiigi/binfmt:qemu-v7.0.0 --install all
+      - echo "We're here"
   pre_build:
     commands:
       - echo "prebuild"
   build:
     commands:
       - echo "Build started on `date`"
-      - docker buildx create --name crossx
-      - docker buildx use crossx
-      # - docker buildx build --push --platform=$PLATFORMS --build-arg CODEFLOW_COMMIT_TAG=$COMMIT_TAG -f $DOCKERFILE --cache-from $DOCKER_REPOSITORY:$PULL_REQUEST_TAG --cache-from $DOCKER_REPOSITORY:master $TAGS $DOCKER_PATH
-
   post_build:
     commands:
-      # if build failed, fail build here.
-      - if [ "$CODEBUILD_BUILD_SUCCEEDING" = "0" ]; then exit 1; fi
       - echo "Build completed on `date`"
-
-      # return docker digest
-      # - DIGEST=$(docker buildx imagetools inspect $DOCKER_REPOSITORY:$COMMIT_TAG | grep sha256 | head -n 1 | awk '{print $2}')
-      # - echo "OUTPUT=ASSET:$DOCKER_REPOSITORY@$DIGEST"
